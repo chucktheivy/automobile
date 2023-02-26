@@ -7,27 +7,32 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
-auto(31752,30,16)
-
+library(ggplot2)
 ```
 
-## R Markdown
+# Question 1
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+m = 31753
+a = 16
+auto30 = auto(m,30,a)
+auto80 = auto(m,(80/3.6),a)
+auto120 = auto(m,(120/3.6),a)
+auto40 = auto(m,(40/3.6),a)
+auto5 = auto(m,(5/3.6),a)
 ```
 
-## Including Plots
+## 30 m/s: P = `r auto30` Watts
+## 80 km/hr: P = `r auto80` Watts
+## 120 km/hr: P = `r auto120` Watts
+## 40 km/hr: P = `r auto40` Watts
+## 5 km/hr: P = `r auto5` Watts
 
-You can also embed plots, for example:
+# Question 2
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
+  stat_function( = auto(31753, x, 16))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
