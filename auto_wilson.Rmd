@@ -8,31 +8,60 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
+library(tidyverse)
+library(here)
+library(janitor)
+library(kableExtra)
+library(lubridate)
 ```
 
 # Question 1
 
 ```{r}
-m = 31753
+source('auto.r')
+m = 31752
+m2 = 15000
 a = 16
 auto30 = auto(m,30,a)
 auto80 = auto(m,(80/3.6),a)
 auto120 = auto(m,(120/3.6),a)
 auto40 = auto(m,(40/3.6),a)
 auto5 = auto(m,(5/3.6),a)
-```
 
+autob30 = auto(m2,30,a)
+autob80 = auto(m2,(80/3.6),a)
+autob120 = auto(m2,(120/3.6),a)
+autob40 = auto(m2,(40/3.6),a)
+autob5 = auto(m2,(5/3.6),a)
+```
+# Heavy Car
 ## 30 m/s: P = `r auto30` Watts
-## 80 km/hr: P = `r auto80` Watts
-## 120 km/hr: P = `r auto120` Watts
-## 40 km/hr: P = `r auto40` Watts
-## 5 km/hr: P = `r auto5` Watts
+#### 80 km/hr: P = `r auto80` Watts
+#### 120 km/hr: P = `r auto120` Watts
+#### 40 km/hr: P = `r auto40` Watts
+#### 5 km/hr: P = `r auto5` Watts
+# Light Car
+#### 30 m/s: P = `r autob30` Watts
+#### 80 km/hr: P = `r autob80` Watts
+#### 120 km/hr: P = `r autob120` Watts
+#### 40 km/hr: P = `r autob40` Watts
+#### 5 km/hr: P = `r autob5` Watts
 
 # Question 2
 
 ```{r}
-ggplot(data = data.frame(x = 0), mapping = aes(x = x)) +
-  stat_function( = auto(31753, x, 16))
+source('auto.r')
+x <- 1:100
+y1 <- auto(m,x,a)
+y2 <- auto(m2,x,a)
+
+df <- data.frame(x=x, y1=auto(m,x,a), y2=auto(m2,x,a))
+
+ggplot(df, aes(x=x)) +
+  geom_line(aes(y=y1, color = "Heavy Car"), size=2) +
+  geom_line(aes(y=y2, color = "Light Car"), size=2) +
+  labs(x="m/s", y="watts", title="") +
+  scale_color_manual(values=c("Heavy Car"="blue", "Light Car"="red"))
 ```
 
 
