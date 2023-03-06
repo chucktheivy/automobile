@@ -46,7 +46,7 @@ AllSpeeds2 = AllSpeeds %>% pivot_longer(cols=everything(), names_to="carweights"
 head(AllSpeeds2)
 
 # create boxplot for "for loop" method
-forloop_plot = ggplot(AllSpeeds2, aes(carweights,power,fill=carweights))+geom_boxplot()+ggtitle("For Loop Method")
+forloop_plot = ggplot(AllSpeeds2, aes(carweights,power,fill=carweights))+geom_boxplot()+ggtitle("For Loop Method") + labs( y = "Power (kWh)")
 
 # Purr Method
 AllSpeedsPur = pmap(list(A = mypossible_cars$area, m=mypossible_cars$mass), auto, V=myspeeds)
@@ -55,21 +55,22 @@ AllSpeedsPur = pmap(list(A = mypossible_cars$area, m=mypossible_cars$mass), auto
 AllSpeedsPur = as.data.frame(AllSpeedsPur, col.names=mypossible_cars$name)
 
 # assign x and y values to dataframe to help create a boxplot
-AllSpeedsPur2 = AllSpeedsPur %>% pivot_longer(cols=everything(), names_to="car", values_to="power")
+AllSpeedsPur2 = AllSpeedsPur %>% pivot_longer(cols=everything(), names_to="carweights", values_to="power")
 
 
 
 # create pmap boxplot
-pmap_plot = ggplot(AllSpeedsPur2, aes(car,power, fill=car))+geom_boxplot()+ggtitle("pmap method")
+pmap_plot = ggplot(AllSpeedsPur2, aes(carweights,power, fill=carweights))+geom_boxplot()+ggtitle("pmap method") + labs( y = "Power (kWh)")
 
 #Print both boxplots
 pmap_plot
 forloop_plot
 
 
-
-
-
+AllSpeeds %>% map(mean)
+AllSpeeds %>% map(max)
+AllSpeedsPur %>% map(mean)
+AllSpeedsPur %>% map(max)
 
 
 
