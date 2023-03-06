@@ -1,0 +1,77 @@
+---
+title: "Assignment3"
+author: "Charlie Wilson"
+date: "3/5/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+knitr::opts_chunk$set(echo =TRUE)
+
+library(tidyverse)
+library(purrr)
+library(ggpubr)
+```
+
+```{r}
+source("auto.r")
+
+# for loop method
+
+# create a data frame for all cars included in analysis
+mypossible_cars = data.frame(name = c("10000kg","65000kg","38000kg","5000kg"),mass=c(10000,65000,38000,5000), area = c(22,30,22,10))
+
+# create sample speed vector
+nsample = 200
+myspeeds = rnorm(mean=80, sd=10, n=nsample)
+
+# create empty data frame for calculated power
+AllSpeeds = data.frame(matrix(nrow=length(myspeeds),ncol = length(mypossible_cars$name)))
+
+# Create power outputs using nested for loop
+for(i in 1:length(mypossible_cars$mass)){
+  for(j in 1:nsample){
+    AllSpeeds[j,i]=auto(m = mypossible_cars$mass[i],V = myspeeds[j],A = mypossible_cars$area[i])
+  }
+}
+
+# name columns of AllSpeeds data frame
+column_names = c("A, B, C, D")
+colnames(AllSpeeds) = mypossible_cars$name
+
+# assign x and y values to dataframe to help create a boxplot
+AllSpeeds2 = AllSpeeds %>% pivot_longer(cols=everything(), names_to="carweights", values_to="power")
+head(AllSpeeds2)
+
+# create boxplot for "for loop" method
+forloop_plot = ggplot(AllSpeeds2, aes(carweights,power,fill=carweights))+geom_boxplot()+ggtitle("For Loop Method")
+
+# Purr Method
+AllSpeedsPur = pmap(list(A = mypossible_cars$area, m=mypossible_cars$mass), auto, V=myspeeds)
+
+# covert to usible data frame for boxplot
+AllSpeedsPur = as.data.frame(AllSpeedsPur, col.names=mypossible_cars$name)
+
+# assign x and y values to dataframe to help create a boxplot
+AllSpeedsPur2 = AllSpeedsPur %>% pivot_longer(cols=everything(), names_to="car", values_to="power")
+
+
+
+# create pmap boxplot
+pmap_plot = ggplot(AllSpeedsPur2, aes(car,power, fill=car))+geom_boxplot()+ggtitle("pmap method")
+
+#Print both boxplots
+pmap_plot
+forloop_plot
+
+
+
+
+
+
+
+
+```
+
